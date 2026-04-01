@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media API Documentation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #0066cc;
+      border-bottom: 3px solid #0066cc;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    
+    h2 {
+      color: #0066cc;
+      margin: 30px 0 20px 0;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #eee;
+    }
+    
+    h3 {
+      margin: 15px 0 10px 0;
+      color: #555;
+    }
+    
+    .endpoint {
+      background: #f9f9f9;
+      border-left: 4px solid #0066cc;
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 5px;
+    }
+    
+    .method {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .get { background-color: #61affe; }
+    .post { background-color: #49cc90; }
+    .put { background-color: #fca130; }
+    .delete { background-color: #f93e3e; }
+    
+    .url {
+      margin-left: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+      font-weight: 600;
+    }
+    
+    .note {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    
+    .resource-nav {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    
+    .resource-nav a {
+      display: inline-block;
+      padding: 8px 16px;
+      margin: 5px;
+      background: #e9ecef;
+      color: #0066cc;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    
+    .resource-nav a:hover {
+      background: #0066cc;
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      .url {
+        display: block;
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Social Media API Documentation</h1>
+    <p>RESTful API for a social media platform. Base URL: <code>http://localhost:3000/api</code></p>
+    
+    <div class="resource-nav">
+      <strong>Quick Navigation:</strong>
+      <a href="#users">Users</a>
+      <a href="#posts">Posts</a>
+      <a href="#comments">Comments</a>
+      <a href="#likes">Likes</a>
+      <a href="#followers">Followers</a>
+    </div>
+    
+    <div class="note">
+      <strong>Note:</strong> For protected endpoints, include the <code>X-User-Id</code> header with a valid user ID.
+    </div>
+    
+    <h2 id="users">Users</h2>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/users</span>
+      <p>Get a list of all users with pagination support.</p>
+      
+      <h3>Query Parameters</h3>
+      <table>
+        <thead>
+          <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>page</td><td>number</td><td>1</td><td>Page number</td></tr>
+          <tr><td>limit</td><td>number</td><td>10</td><td>Number of items per page</td></tr>
+        </tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "count": 3,
+  "page": 1,
+  "total_pages": 1,
+  "pagination": {},
+  "data": [
+    {
+      "id": "1",
+      "username": "traveler",
+      "full_name": "Karma",
+      "profile_picture": "https://example.com/profiles/traveler.jpg",
+      "bio": "Travel photographer",
+      "created_at": "2023-01-15"
+    }
+  ]
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/users/:id</span>
+      <p>Get a specific user by ID.</p>
+      
+      <h3>Parameters</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>id</td><td>string</td><td>User ID</td></tr></tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "data": {
+    "id": "1",
+    "username": "traveler",
+    "email": "traveler@example.com",
+    "full_name": "Karma",
+    "profile_picture": "https://example.com/profiles/traveler.jpg",
+    "bio": "Travel photographer",
+    "created_at": "2023-01-15"
+  }
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method post">POST</span>
+      <span class="url">/users</span>
+      <p>Create a new user.</p>
+      
+      <h3>Request Body</h3>
+      <pre>{
+  "username": "new_traveler",
+  "email": "new@example.com",
+  "full_name": "New Traveler",
+  "bio": "Adventure seeker"
+}</pre>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "data": {
+    "id": "4",
+    "username": "new_traveler",
+    "full_name": "New Traveler",
+    "email": "new@example.com",
+    "profile_picture": "default-profile.jpg",
+    "bio": "Adventure seeker",
+    "created_at": "2023-03-20"
+  }
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method put">PUT</span>
+      <span class="url">/users/:id</span>
+      <p>Update an existing user.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Request Body</h3>
+      <pre>{
+  "full_name": "Updated Name",
+  "bio": "Updated bio information"
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method delete">DELETE</span>
+      <span class="url">/users/:id</span>
+      <p>Delete a user.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+    </div>
+    
+    <h2 id="posts">Posts</h2>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/posts</span>
+      <p>Get a list of all posts with pagination.</p>
+      
+      <h3>Query Parameters</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>page</td><td>number</td><td>1</td><td>Page number</td></tr>
+          <tr><td>limit</td><td>number</td><td>10</td><td>Items per page</td></tr>
+        </tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "count": 3,
+  "page": 1,
+  "total_pages": 1,
+  "data": [
+    {
+      "id": "1",
+      "caption": "Beautiful sunset at the beach!",
+      "image": "https://example.com/images/sunset.jpg",
+      "created_at": "2023-03-01",
+      "user": {
+        "id": "1",
+        "username": "traveler",
+        "full_name": "Karma",
+        "profile_picture": "https://example.com/profiles/traveler.jpg"
+      }
+    }
+  ]
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/posts/:id</span>
+      <p>Get a specific post by ID.</p>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method post">POST</span>
+      <span class="url">/posts</span>
+      <p>Create a new post.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Request Body</h3>
+      <pre>{
+  "caption": "My new photo!",
+  "image": "https://example.com/images/new-photo.jpg"
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method put">PUT</span>
+      <span class="url">/posts/:id</span>
+      <p>Update an existing post.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Request Body</h3>
+      <pre>{
+  "caption": "Updated caption"
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method delete">DELETE</span>
+      <span class="url">/posts/:id</span>
+      <p>Delete a post.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+    </div>
+    
+    <h2 id="comments">Comments</h2>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/posts/:postId/comments</span>
+      <p>Get all comments for a specific post.</p>
+      
+      <h3>Parameters</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>postId</td><td>string</td><td>Post ID</td></tr></tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "count": 2,
+  "page": 1,
+  "total_pages": 1,
+  "data": [
+    {
+      "id": "1",
+      "content": "Amazing photo!",
+      "post_id": "1",
+      "created_at": "2023-03-01T10:30:00Z",
+      "user": {
+        "id": "2",
+        "username": "foodie",
+        "full_name": "Tashi",
+        "profile_picture": "https://example.com/profiles/foodie.jpg"
+      }
+    }
+  ]
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/comments/:id</span>
+      <p>Get a specific comment by ID.</p>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method post">POST</span>
+      <span class="url">/posts/:postId/comments</span>
+      <p>Add a comment to a post.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Request Body</h3>
+      <pre>{
+  "content": "This is my comment!"
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method put">PUT</span>
+      <span class="url">/comments/:id</span>
+      <p>Update a comment.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Request Body</h3>
+      <pre>{
+  "content": "Updated comment text"
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method delete">DELETE</span>
+      <span class="url">/comments/:id</span>
+      <p>Delete a comment.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+    </div>
+    
+    <h2 id="likes">Likes</h2>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/posts/:postId/likes</span>
+      <p>Get all users who liked a specific post.</p>
+      
+      <h3>Parameters</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>postId</td><td>string</td><td>Post ID</td></tr></tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "count": 2,
+  "total_likes": 2,
+  "page": 1,
+  "total_pages": 1,
+  "data": [
+    {
+      "id": "1",
+      "post_id": "1",
+      "created_at": "2023-03-01T10:25:00Z",
+      "user": {
+        "id": "2",
+        "username": "foodie",
+        "full_name": "Tashi",
+        "profile_picture": "https://example.com/profiles/foodie.jpg"
+      }
+    }
+  ]
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method post">POST</span>
+      <span class="url">/posts/:postId/likes</span>
+      <p>Like a post.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "total_likes": 3,
+  "data": {
+    "id": "5",
+    "post_id": "1",
+    "user_id": "1",
+    "created_at": "2024-01-15T10:30:00.000Z",
+    "user": {
+      "id": "1",
+      "username": "traveler",
+      "full_name": "Karma",
+      "profile_picture": "https://example.com/profiles/traveler.jpg"
+    }
+  }
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method delete">DELETE</span>
+      <span class="url">/posts/:postId/likes</span>
+      <p>Unlike a post.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "message": "Post unliked successfully",
+  "total_likes": 2,
+  "data": {}
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/posts/:postId/likes/check</span>
+      <p>Check if the current user has liked a post.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "data": {
+    "post_id": "1",
+    "user_id": "1",
+    "has_liked": true,
+    "total_likes": 3
+  }
+}</pre>
+    </div>
+    
+    <h2 id="followers">Followers</h2>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/users/:userId/followers</span>
+      <p>Get list of users following a user.</p>
+      
+      <h3>Parameters</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>userId</td><td>string</td><td>User ID</td></tr></tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "count": 2,
+  "total_followers": 2,
+  "page": 1,
+  "total_pages": 1,
+  "data": [
+    {
+      "id": "1",
+      "followed_at": "2023-01-20T08:00:00Z",
+      "follower": {
+        "id": "2",
+        "username": "foodie",
+        "full_name": "Tashi",
+        "profile_picture": "https://example.com/profiles/foodie.jpg",
+        "bio": "Food lover"
+      }
+    }
+  ]
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/users/:userId/following</span>
+      <p>Get list of users a user is following.</p>
+      
+      <h3>Parameters</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>userId</td><td>string</td><td>User ID</td></tr></tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "count": 1,
+  "total_following": 1,
+  "page": 1,
+  "total_pages": 1,
+  "data": [
+    {
+      "id": "3",
+      "followed_at": "2023-01-22T10:15:00Z",
+      "following": {
+        "id": "2",
+        "username": "foodie",
+        "full_name": "Tashi",
+        "profile_picture": "https://example.com/profiles/foodie.jpg",
+        "bio": "Food lover"
+      }
+    }
+  ]
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method post">POST</span>
+      <span class="url">/users/:userId/follow</span>
+      <p>Follow a user.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "message": "You are now following foodie",
+  "data": {
+    "id": "4",
+    "follower": {
+      "id": "1",
+      "username": "traveler",
+      "full_name": "Karma"
+    },
+    "following": {
+      "id": "2",
+      "username": "foodie",
+      "full_name": "Tashi"
+    },
+    "followed_at": "2024-01-15T10:30:00.000Z"
+  }
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method delete">DELETE</span>
+      <span class="url">/users/:userId/follow</span>
+      <p>Unfollow a user.</p>
+      <p><strong>Headers:</strong> <code>X-User-Id: {user_id}</code></p>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "message": "You have unfollowed foodie",
+  "data": {}
+}</pre>
+    </div>
+    
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="url">/users/:userId/followers/stats</span>
+      <p>Get follower and following counts for a user.</p>
+      
+      <h3>Parameters</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>userId</td><td>string</td><td>User ID</td></tr></tbody>
+      </table>
+      
+      <h3>Response</h3>
+      <pre>{
+  "success": true,
+  "data": {
+    "user_id": "1",
+    "username": "traveler",
+    "followers_count": 2,
+    "following_count": 1
+  }
+}</pre>
+    </div>
+    
+    <h2>Content Negotiation</h2>
+    <p>The API supports both JSON and XML responses. Set the <code>Accept</code> header to:</p>
+    <ul>
+      <li><code>application/json</code> - Returns JSON responses (default)</li>
+      <li><code>application/xml</code> - Returns XML responses</li>
+    </ul>
+    
+    <h3>XML Response Example</h3>
+    <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;response&gt;
+  &lt;success&gt;true&lt;/success&gt;
+  &lt;data&gt;
+    &lt;id&gt;1&lt;/id&gt;
+    &lt;username&gt;traveler&lt;/username&gt;
+    &lt;full_name&gt;Karma&lt;/full_name&gt;
+  &lt;/data&gt;
+&lt;/response&gt;</pre>
+    
+    <h2>Authentication</h2>
+    <p>Authentication is simulated using the <code>X-User-Id</code> header. Include a valid user ID from the mock data to access protected endpoints.</p>
+    <p><strong>Available User IDs:</strong> "1", "2", "3"</p>
+    
+    <h2>HTTP Status Codes</h2>
+    <table>
+      <thead>
+        <tr><th>Code</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>200</td><td>OK - Request successful</td></tr>
+        <tr><td>201</td><td>Created - Resource created successfully</td></tr>
+        <tr><td>400</td><td>Bad Request - Invalid input</td></tr>
+        <tr><td>401</td><td>Unauthorized - Missing or invalid authentication</td></tr>
+        <tr><td>404</td><td>Not Found - Resource doesn't exist</td></tr>
+        <tr><td>500</td><td>Internal Server Error</td></tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
