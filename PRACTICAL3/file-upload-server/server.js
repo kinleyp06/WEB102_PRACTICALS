@@ -200,4 +200,4 @@ app.listen(PORT, () => {
     console.log(` Server running on http://localhost:${PORT}`);
     console.log(` Uploads directory: ${uploadDir}`);
     console.log(` CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-});
+}); 
