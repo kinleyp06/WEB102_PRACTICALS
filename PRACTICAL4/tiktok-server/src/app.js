@@ -1,16 +1,21 @@
-const express = require('express');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+
+require("dotenv").config();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
-// Routes (add these as you create them)
-// const authRoutes = require('./routes/auth');
-// app.use('/api/auth', authRoutes);
+// Routes
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/videos", require("./routes/videoRoutes"));
+app.use("/api/comments", require("./routes/commentRoutes"));
 
-app.get('/', (req, res) => {
-  res.json({ message: 'TikTok server running!' });
+// Home route
+app.get("/", (req, res) => {
+  res.send("TikTok API is running!");
 });
 
 module.exports = app;

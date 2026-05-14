@@ -1,9 +1,10 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -20,8 +21,9 @@ model User {
   comments      Comment[]
   videoLikes    VideoLike[]
   commentLikes  CommentLike[]
-  followers     Follow[] @relation("following")
-  following     Follow[] @relation("follower")
+
+  followers Follow[] @relation("following")
+  following Follow[] @relation("follower")
 }
 
 model Video {
@@ -31,27 +33,31 @@ model Video {
   videoUrl    String
   thumbnail   String?
   createdAt   DateTime @default(now())
-  userId      Int
 
-  user      User        @relation(fields: [userId], references: [id])
-  comments  Comment[]
-  likes     VideoLike[]
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  comments Comment[]
+  likes    VideoLike[]
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
   text      String
   createdAt DateTime @default(now())
-  userId    Int
-  videoId   Int
 
-  user   User          @relation(fields: [userId], references: [id])
-  video  Video         @relation(fields: [videoId], references: [id])
-  likes  CommentLike[]
+  userId  Int
+  videoId Int
+
+  user  User  @relation(fields: [userId], references: [id])
+  video Video @relation(fields: [videoId], references: [id])
+
+  likes CommentLike[]
 }
 
 model VideoLike {
-  id      Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
   userId  Int
   videoId Int
 
@@ -62,7 +68,8 @@ model VideoLike {
 }
 
 model CommentLike {
-  id        Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
   userId    Int
   commentId Int
 
@@ -73,8 +80,9 @@ model CommentLike {
 }
 
 model Follow {
-  id          Int @id @default(autoincrement())
-  followerId  Int
+  id Int @id @default(autoincrement())
+
+  followerId Int
   followingId Int
 
   follower  User @relation("follower", fields: [followerId], references: [id])
