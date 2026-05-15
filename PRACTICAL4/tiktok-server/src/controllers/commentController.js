@@ -1,46 +1,36 @@
 const prisma = require("../lib/prisma");
 
-// Add Comment
-exports.addComment = async (req, res) => {
+exports.createComment = async (req, res) => {
   try {
+    const { text, videoId } = req.body;
+
     const comment = await prisma.comment.create({
       data: {
-        text: req.body.text,
+        text,
+        videoId,
         userId: req.user.id,
-        videoId: parseInt(req.params.videoId),
       },
     });
 
     res.status(201).json(comment);
-
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: error.message,
     });
   }
 };
 
-// Get Comments
 exports.getComments = async (req, res) => {
   try {
     const comments = await prisma.comment.findMany({
-      where: {
-        videoId: parseInt(req.params.videoId),
-      },
-
       include: {
-        user: {
-          select: {
-            username: true,
-          },
-        },
+        user: true,
       },
     });
 
     res.json(comments);
-
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: error.message,
     });
   }

@@ -1,19 +1,9 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-
 const prisma = require("../lib/prisma");
 
-const generateToken = (id) => {
-  return jwt.sign(
-    { id },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRE,
-    }
-  );
-};
+const bcrypt = require("bcrypt");
 
-// Register
+const jwt = require("jsonwebtoken");
+
 exports.register = async (req, res) => {
   try {
     const { username, email, password, name } = req.body;
@@ -29,13 +19,7 @@ exports.register = async (req, res) => {
       },
     });
 
-    res.status(201).json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      token: generateToken(user.id),
-    });
-
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json({
       message: error.message,
@@ -43,7 +27,6 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -54,50 +37,33 @@ exports.login = async (req, res) => {
       },
     });
 
-    if (
-      user &&
-      (await bcrypt.compare(password, user.password))
-    ) {
-      res.json({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        token: generateToken(user.id),
-      });
-    } else {
-      res.status(401).json({
-        message: "Invalid email or password",
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found",
       });
     }
 
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
-  }
-};
+    const isMatch = await bcrypt.compare(password, user.password);
 
-// Profile
-exports.getProfile = async (req, res) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: req.user.id,
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
       },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        name: true,
-        bio: true,
-        avatar: true,
-      },
+      process.env.JWT_SECRET,
+    );
+
+    res.json({
+      token,
     });
-
-    res.json(user);
-
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: error.message,
     });
   }

@@ -4,16 +4,17 @@ const router = express.Router();
 
 const {
   createVideo,
-  getAllVideos,
+  getVideos,
   likeVideo,
 } = require("../controllers/videoController");
 
 const { protect } = require("../middleware/auth");
 
-// Routes
-router.get("/", getAllVideos);
+const upload = require("../middleware/uploadMiddleware");
 
-router.post("/", protect, createVideo);
+router.get("/", getVideos);
+
+router.post("/", protect, upload.single("video"), createVideo);
 
 router.post("/:id/like", protect, likeVideo);
 

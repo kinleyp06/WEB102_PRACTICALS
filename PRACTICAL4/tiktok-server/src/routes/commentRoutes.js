@@ -3,15 +3,14 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    addComment,
-    getComments,
+  createComment,
+  getComments,
 } = require("../controllers/commentController");
 
 const { protect } = require("../middleware/auth");
 
-// Routes
-router.get("/:videoId", getComments);
+router.get("/", getComments);
 
-router.post("/:videoId", protect, addComment);
+router.post("/", protect, createComment);
 
 module.exports = router;

@@ -12,81 +12,41 @@ model User {
   username  String   @unique
   email     String   @unique
   password  String
-  name      String?
-  bio       String?
-  avatar    String?
+  name      String
+  videos    Video[]
+  comments  Comment[]
+  likes     Like[]
   createdAt DateTime @default(now())
-
-  videos        Video[]
-  comments      Comment[]
-  videoLikes    VideoLike[]
-  commentLikes  CommentLike[]
-
-  followers Follow[] @relation("following")
-  following Follow[] @relation("follower")
 }
 
 model Video {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
-  description String?
+  description String
   videoUrl    String
   thumbnail   String?
-  createdAt   DateTime @default(now())
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-
-  comments Comment[]
-  likes    VideoLike[]
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  comments    Comment[]
+  likes       Like[]
+  createdAt   DateTime  @default(now())
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
   text      String
-  createdAt DateTime @default(now())
-
-  userId  Int
-  videoId Int
-
-  user  User  @relation(fields: [userId], references: [id])
-  video Video @relation(fields: [videoId], references: [id])
-
-  likes CommentLike[]
-}
-
-model VideoLike {
-  id Int @id @default(autoincrement())
-
-  userId  Int
-  videoId Int
-
-  user  User  @relation(fields: [userId], references: [id])
-  video Video @relation(fields: [videoId], references: [id])
-
-  @@unique([userId, videoId])
-}
-
-model CommentLike {
-  id Int @id @default(autoincrement())
-
   userId    Int
-  commentId Int
-
-  user    User    @relation(fields: [userId], references: [id])
-  comment Comment @relation(fields: [commentId], references: [id])
-
-  @@unique([userId, commentId])
+  videoId   Int
+  user      User     @relation(fields: [userId], references: [id])
+  video     Video    @relation(fields: [videoId], references: [id])
+  createdAt DateTime @default(now())
 }
 
-model Follow {
-  id Int @id @default(autoincrement())
-
-  followerId Int
-  followingId Int
-
-  follower  User @relation("follower", fields: [followerId], references: [id])
-  following User @relation("following", fields: [followingId], references: [id])
-
-  @@unique([followerId, followingId])
+model Like {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  videoId   Int
+  user      User     @relation(fields: [userId], references: [id])
+  video     Video    @relation(fields: [videoId], references: [id])
+  createdAt DateTime @default(now())
 }
