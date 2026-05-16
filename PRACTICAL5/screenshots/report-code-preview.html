@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WEB102 Practical 5 - Code</title>
+  <style>
+    body { font-family: Consolas, monospace; background: #1e1e1e; color: #d4d4d4; padding: 24px; }
+    h1, h2 { color: #ff4081; font-family: Arial, sans-serif; }
+    section { margin-bottom: 32px; background: #252526; padding: 16px; border-radius: 8px; }
+    pre { white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
+    .path { color: #9cdcfe; margin-bottom: 8px; font-family: Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <h1>WEB102 Practical 5 — Supabase Integration (Code)</h1>
+  <section>
+    <h2>Backend: Supabase Client</h2>
+    <p class="path">tiktok-server/src/lib/supabase.js</p>
+    <pre>const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+module.exports = supabase;</pre>
+  </section>
+  <section>
+    <h2>Backend: Storage Service</h2>
+    <p class="path">tiktok-server/src/services/storageService.js</p>
+    <pre>uploadVideo(), uploadThumbnail(), getPublicUrl(), deleteVideoAssets()</pre>
+  </section>
+  <section>
+    <h2>Frontend: Upload Service</h2>
+    <p class="path">tiktok-frontend/src/services/uploadService.js</p>
+    <pre>uploadVideoWithThumbnail() → Supabase buckets: videos + thumbnails</pre>
+  </section>
+  <section>
+    <h2>Prisma Schema</h2>
+    <p class="path">tiktok-server/prisma/schema.prisma</p>
+    <pre>videoStoragePath String?
+thumbnailStoragePath String?</pre>
+  </section>
+</body>
+</html>
